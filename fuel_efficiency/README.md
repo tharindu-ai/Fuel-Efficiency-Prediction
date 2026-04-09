@@ -1,16 +1,70 @@
-# React + Vite
+# Fuel Efficiency Prediction App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This folder contains:
+- A React frontend (Vite) in `src/`
+- A Flask backend API in `app.py`
+- Trained model file `model (1).pkl`
 
-Currently, two official plugins are available:
+## 1) Start Backend API
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Open terminal in this folder and run:
 
-## React Compiler
+```bash
+pip install -r requirements.txt
+python app.py
+```
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Backend runs at `http://127.0.0.1:5000`.
 
-## Expanding the ESLint configuration
+Health check:
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```bash
+curl http://127.0.0.1:5000/health
+```
+
+## 2) Start Frontend
+
+In another terminal:
+
+```bash
+npm install
+npm run dev
+```
+
+Frontend runs at `http://localhost:5173` and sends API calls to `/api/predict`.
+Vite proxy forwards `/api` to `http://127.0.0.1:5000`.
+
+## 3) Common Error Fix
+
+If you see:
+
+"Could not reach /api/predict" or connection errors,
+it means backend is not running yet. Start `python app.py` first.
+
+## API Payload
+
+`POST /predict` accepts any of these formats:
+
+```json
+{
+	"cylinders": 4,
+	"displacement": 120,
+	"horsepower": 95,
+	"weight": 2500,
+	"acceleration": 15,
+	"model_year": 80,
+	"origin": 1
+}
+```
+
+or
+
+```json
+{ "features": [4, 120, 95, 2500, 15, 80, 1] }
+```
+
+or
+
+```json
+{ "input": [4, 120, 95, 2500, 15, 80, 1] }
+```
